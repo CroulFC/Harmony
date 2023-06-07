@@ -1,6 +1,8 @@
 #pragma once
 #include <stdint.h>
 
+static constexpr int WAV_FILE_HEADER_SIZE = 44;
+
 typedef struct _WAV_FILE_HEADER{
     char riff_sign[4];
     uint32_t wav_size;
@@ -19,3 +21,4 @@ typedef struct _WAV_FILE_HEADER{
     uint32_t data_bytes;
 } WAV_FILE_HEADER;
 
+static_assert(sizeof(WAV_FILE_HEADER) == WAV_FILE_HEADER_SIZE,"Invalid WAV_FILE_HEADER structure size");
