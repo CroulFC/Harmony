@@ -1,7 +1,10 @@
 #pragma once
 #include <stdint.h>
 
-static constexpr int WAV_FILE_HEADER_SIZE = 44;
+static constexpr uint8_t   WAV_FILE_HEADER_SIZE = 44;
+static constexpr uint32_t  FMT_CHUNK_SIZE = 16; 
+
+static constexpr uint16_t  WAV_AUDIO_FORMAT_PCM = 1; 
 
 typedef struct _WAV_FILE_HEADER{
     char riff_sign[4];

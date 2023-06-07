@@ -1,0 +1,7 @@
+Harmony/CMakeTemp/
+Harmony/Binary/
+Harmony/.vscode/
+
+Harmony/CMakeLists.txt
+Harmony/CMakeCache.txt
+Harmony/cmake_install.cmake
