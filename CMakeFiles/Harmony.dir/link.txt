@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/Harmony.dir/Source/Main.cpp.o -o Build/Harmony 
