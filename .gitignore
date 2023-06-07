@@ -1,0 +1,16 @@
+Harmony/CMakeFiles/
+Harmony/Build/
+Harmony/.vscode/
+
+CMakeFiles/
+Build/
+.vscode/
+
+Harmony/CMakeLists.txt
+Harmony/CMakeCache.txt
+Harmony/cmake_install.cmake
+
+CMakeLists.txt
+CMakeCache.txt
+cmake_install.cmake
+Makefile
