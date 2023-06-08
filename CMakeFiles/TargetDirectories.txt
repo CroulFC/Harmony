@@ -1,3 +1,0 @@
-/home/user/Develop/Harmony/CMakeFiles/Harmony.dir
-/home/user/Develop/Harmony/CMakeFiles/edit_cache.dir
-/home/user/Develop/Harmony/CMakeFiles/rebuild_cache.dir
