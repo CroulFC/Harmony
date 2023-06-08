@@ -66,9 +66,15 @@ class WavFile{
 		_file_header = new WAV_FILE_HEADER;
 		if(!_file_header){
 			throw "Can't allocate memory for WAV header\n";
-			return;
+		}
+		try{
+			_wav_file = std::ofstream(file_name);
+		}
+		catch(std::exception& e){
+			throw e;
 		}
 
+		return;
 	}
 
 };
