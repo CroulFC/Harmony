@@ -1,6 +1,5 @@
-Build/
+Bin/
 CMakeFiles/
-.git/
 .vscode/
 CMakeCache.txt
 cmake_install.cmake
