@@ -1,8 +1,8 @@
+Build/
 CMakeFiles/
-Bin/
+.git/
 .vscode/
-cmake-build-debug/
-
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+cmake-build-debug/
