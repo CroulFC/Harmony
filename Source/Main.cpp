@@ -1,4 +1,5 @@
 #include "WavFile.h"
+#include "SignalFormer.h"
 
 #include <iostream>
 #include <cmath>
@@ -6,15 +7,25 @@
 static void doTest(const std::string &file_path)
 {
 	//Try to create WAV-file with 10 secs of 1 KHz sin
-	static constexpr uint32_t TEST_SOUND_LENGTH = 5u;
-	static constexpr uint32_t TEST_SOUND_FREQUENCY = 300u;
-	static constexpr uint32_t TEST_SAMPLE_RATE = 48000u;
-	static constexpr uint32_t TEST_AMPLITUDE = 100u;
-	static constexpr uint8_t TEST_BYTES_PER_SAMPLE = 1;
+	static constexpr uint32_t 	TEST_SOUND_LENGTH = 5u;
+	static constexpr uint32_t 	TEST_SOUND_FREQUENCY = 300u;
+	static constexpr uint32_t 	TEST_NUMBER_OF_HARMONICS = 32u;
+	static constexpr uint32_t 	TEST_SAMPLE_RATE = 48000u;
+	static constexpr double 	TEST_AMPLITUDE = 20.0f;
+	static constexpr uint8_t 	TEST_BYTES_PER_SAMPLE = 1;
 
 	WavFile test_wav_file(TEST_SAMPLE_RATE, TEST_BYTES_PER_SAMPLE);
 
 	test_wav_file.Initialize(file_path, WavFile::OPEN_MODE::WRITE);
+
+	SignalFormer::SIGNAL_PARAMETERS test_params;
+	test_params.signal_frequency = TEST_SOUND_FREQUENCY;
+	test_params.harmonics_set = SignalFormer::HARMONICS_SET::ALL;
+	test_params.number_of_harmonics = TEST_NUMBER_OF_HARMONICS;
+	test_params.amplitude = TEST_AMPLITUDE;
+	test_params.samples_per_second = TEST_SAMPLE_RATE;
+
+	SignalFormer test_signal_former(test_params);
 
 	uint8_t *one_second = new uint8_t[TEST_SAMPLE_RATE];
 

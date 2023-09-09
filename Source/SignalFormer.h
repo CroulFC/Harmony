@@ -1,17 +1,31 @@
 #include <inttypes.h>
-#include <vector>
 
 class SignalFormer{
 	private:
+	uint32_t	m_signal_freq{};
+	uint32_t 	m_smaples_per_second{};
+	uint32_t	m_signal_amplitude{};
 	uint8_t		m_number_of_harmonics{};
 	uint8_t		m_bytes_per_sample{};
 	uint8_t 	m_data_bits_per_sample{};
-	uint32_t 	m_samples_per_period{};
-
-
 
 	public:
-	explicit SignalFormer(uint8_t butes_per_sample, uint8_t data_bits_per_sample);
+
+	enum class HARMONICS_SET{
+		ONLY_EVEN = 0,
+		ONLY_ODD,
+		ALL
+	};
+
+	struct SIGNAL_PARAMETERS{
+		uint32_t		signal_frequency;
+		uint32_t		samples_per_second;
+		double			amplitude;
+		uint8_t			number_of_harmonics;
+		HARMONICS_SET	harmonics_set;
+	};
+
+	explicit SignalFormer(SIGNAL_PARAMETERS &signal_params);
 
 	explicit SignalFormer(const SignalFormer&) = delete;
 	SignalFormer& operator=(const SignalFormer&) = delete;
@@ -19,10 +33,4 @@ class SignalFormer{
 	SignalFormer(SignalFormer &&former) noexcept;
 	SignalFormer& operator=(SignalFormer &&former) noexcept;
 
-	//Размер элемента вектора должен определяться в соответсвтии с полем m_bytes_per_sample
-	//Также стоит определиться, стоит ли возвращать вектор или функция должна принимать указатель
-	//на буфер, который будет содержать результат
-	std::vector<uint32_t> GenerateOnePeriod(std::vector<uint8_t> &data_slice);
-
-	std::vector<uint32_t> GenerateFullSignal(std::vector<uint8_t> &full_data);
 };

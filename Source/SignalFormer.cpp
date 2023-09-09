@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
-std::vector<uint32_t> SignalFormer::GenerateOnePeriod(std::vector<uint8_t> &data_slice){
-	
-}
+	SignalFormer::SignalFormer(SIGNAL_PARAMETERS &signal_params){
+		m_signal_freq = signal_params.signal_frequency;
+		m_signal_amplitude = signal_params.amplitude;
+	}
