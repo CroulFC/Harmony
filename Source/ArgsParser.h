@@ -23,8 +23,8 @@ class ArgumentsParser final{
 			OPTIONAL
 		};
 
-		const char 			EMPTY_SHORT_NAME = '\0';
-		const std::string 	EMPTY_FULL_NAME = std::string("");
+		static constexpr char 			EMPTY_SHORT_NAME = '\0';
+		inline static const std::string EMPTY_FULL_NAME = std::string("");
 
 		private:
 		char 			m_short_name = '\0';
@@ -35,10 +35,13 @@ class ArgumentsParser final{
 		public:
 		Parameter() = delete;
 		Parameter(char short_name, std::string full_name, PARAM_PRESENCE parameter_presence, VALUE_PRESENCE value_presence);
+		bool operator ==(const Parameter& p);
+		bool operator <(const Parameter& p);
+		bool operator >(const Parameter& p);
 	};
 
 	private:
-	std::map<const Parameter&, char*> 	m_arguments{};
+	std::map<Parameter, const char*> 	m_arguments{};
 	PARSE_STATUS						m_parse_status = PARSE_STATUS::NOT_PARSED;
 
 	public:
@@ -46,5 +49,5 @@ class ArgumentsParser final{
 	explicit ArgumentsParser(int argc, char** argv);
 	void AddParam(const Parameter& param);
 	PARSE_STATUS Parse();
-	std::any GetValueOfParameter(const std::string& param_name);
+	std::pair<bool, const char*> GetValueOfParameter(const Parameter& param);
 };
