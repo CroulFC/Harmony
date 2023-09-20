@@ -45,6 +45,12 @@ class ArgumentsParser final{
 		bool operator >(const Parameter &p);
 	};
 
+	ArgumentsParser() = delete;
+	explicit ArgumentsParser(int argc, char** argv);
+	void AddParam(const Parameter& param);
+	PARSE_STATUS Parse();
+	std::pair<bool, const char*> GetValueOfParameter(const Parameter &param);
+
 	private:
 	int		m_argc{};
 	char** 	m_argv{};
@@ -52,12 +58,6 @@ class ArgumentsParser final{
 	std::map<Parameter, std::pair<bool, const char*>> 	m_arguments{};
 	PARSE_STATUS										m_parse_status = PARSE_STATUS::NOT_PARSED;
 
-	std::pair<bool, const char*> FindValueOfParam(const Parameter& param);
-
-	public:
-	ArgumentsParser() = delete;
-	explicit ArgumentsParser(int argc, char** argv);
-	void AddParam(const Parameter& param);
-	PARSE_STATUS Parse();
-	std::pair<bool, const char*> GetValueOfParameter(const Parameter& param);
+	bool IsParseResultCorrect();
+	std::pair<bool, const char*> FindValueOfParam(const Parameter &param, const int index);
 };

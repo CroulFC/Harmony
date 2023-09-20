@@ -1,4 +1,5 @@
 #include "WavFile.h"
+#include "ArgsParser.h"
 
 #include <iostream>
 #include <cmath>
@@ -37,6 +38,14 @@ static void showUsage(const std::string &app_path)
 	std::cout << "Usage: " << app_path << " <wav file path>" << std::endl;
 }
 
+static void ShowVerboseHelp(){
+
+}
+
+static void ShowHelp(){
+	std::cout << "Usage: Harmony [-o/--output]";
+}
+
 int main(int argc, char* argv[]){
 
 	// Check args
@@ -45,6 +54,19 @@ int main(int argc, char* argv[]){
 		std::cerr << "Invalid args" << std::endl;
 		showUsage(argv[0]);
 		return EXIT_SUCCESS;
+	}
+
+	ArgumentsParser parser(argc, argv);
+	ArgumentsParser::Parameter help_param('h',
+	std::string("help"),
+	ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+	ArgumentsParser::Parameter::VALUE_PRESENCE::NOT_REQUIRED
+	);
+
+	auto result = parser.GetValueOfParameter(help_param);
+	if(result.first){
+		ShowHelp();
+		return 0;
 	}
 
 	// Run tests
