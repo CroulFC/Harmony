@@ -35,14 +35,14 @@ class ArgumentsParser final{
 		public:
 		bool CompareShortName(const char ch) {return m_short_name == ch;}
 		bool ComareFullName(const std::string &str) {return m_full_name == str;}
-		PARAM_PRESENCE GerParameterPresence() {return m_param_presence;}
-		VALUE_PRESENCE GetValuePresence() {return m_value_presence;}
+		PARAM_PRESENCE GerParameterPresence() const {return m_param_presence;}
+		VALUE_PRESENCE GetValuePresence() const {return m_value_presence;}
 
 		Parameter() = delete;
 		Parameter(char short_name, const std::string &full_name, PARAM_PRESENCE parameter_presence, VALUE_PRESENCE value_presence);
-		bool operator ==(const Parameter &p);
-		bool operator <(const Parameter &p);
-		bool operator >(const Parameter &p);
+		bool operator ==(const Parameter &p) const;
+		bool operator <(const Parameter &p) const;
+		bool operator >(const Parameter &p) const;
 	};
 
 	ArgumentsParser() = delete;
@@ -54,7 +54,7 @@ class ArgumentsParser final{
 	private:
 	int		m_argc{};
 	char** 	m_argv{};
-	//Pair to support params what not require value (flags like --help)
+	//Pair <present, value> to support params what not require value (flags like --help)
 	std::map<Parameter, std::pair<bool, const char*>> 	m_arguments{};
 	PARSE_STATUS										m_parse_status = PARSE_STATUS::NOT_PARSED;
 

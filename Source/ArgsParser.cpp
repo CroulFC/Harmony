@@ -4,7 +4,7 @@
 #include <memory>
 #include <string.h>
 
-bool ArgumentsParser::Parameter::operator==(const Parameter &p){
+bool ArgumentsParser::Parameter::operator==(const Parameter &p) const {
 	if(m_short_name != p.m_short_name){
 		return false;
 	}
@@ -16,7 +16,7 @@ bool ArgumentsParser::Parameter::operator==(const Parameter &p){
 	return true;
 }
 
-bool ArgumentsParser::Parameter::operator<(const Parameter &p){
+bool ArgumentsParser::Parameter::operator<(const Parameter &p) const {
 	if(m_short_name >= p.m_short_name){
 		return false;
 	}
@@ -28,7 +28,7 @@ bool ArgumentsParser::Parameter::operator<(const Parameter &p){
 	return true;
 }
 
-bool ArgumentsParser::Parameter::operator>(const Parameter &p){
+bool ArgumentsParser::Parameter::operator>(const Parameter &p) const{
 	return !(operator==(p) || operator<(p));
 }
 
@@ -63,22 +63,6 @@ void ArgumentsParser::AddParam(const Parameter &param){
 	m_arguments[param] = std::pair<bool, const char*>{false, nullptr};
 }
 
-std::pair<bool, const char*> ArgumentsParser::FindValueOfParam(const ArgumentsParser::Parameter &param, const int index){
-	std::pair<bool, const char*>  return_val{true, nullptr};
-
-	if(index == m_argc - 1){
-		return return_val;
-	}
-
-	std::string next_string = m_argv[index + 1];
-
-	if(std::all_of(next_string.begin(), next_string.end(), ::isdigit)){
-		return_val.second = m_argv[index + 1];
-	}
-
-	return return_val;
-}
-
 bool ArgumentsParser::IsParseResultCorrect(){
 	for (auto p : m_arguments){
 		if(  	p.first.GetValuePresence() == Parameter::VALUE_PRESENCE::REQUIRED
@@ -90,6 +74,13 @@ bool ArgumentsParser::IsParseResultCorrect(){
 
 		if(  	p.first.GerParameterPresence() == Parameter::PARAM_PRESENCE::REQUIRED
 		  	&&	p.second.first == false
+		  )
+		{
+			return false;
+		}
+
+		if(  	p.first.GetValuePresence() == Parameter::VALUE_PRESENCE::NOT_REQUIRED
+		  	&&	p.second.second != nullptr
 		  )
 		{
 			return false;
@@ -121,7 +112,31 @@ ArgumentsParser::PARSE_STATUS ArgumentsParser::Parse(){
 			continue;
 		}
 
-		matched_param->second = FindValueOfParam(matched_param->first, index);
+		matched_param->second.first = true;
+
+		if(index == m_argc - 1){
+			matched_param->second.second = nullptr;
+			continue;
+		}
+
+		if(m_argv[index + 1][0] != '-'){
+			matched_param->second.second = m_argv[index+1];
+			continue;
+		}
+
+		Parameter next(	m_argv[index + 1][1],
+						std::string(m_argv[index + 1]),
+						Parameter::PARAM_PRESENCE::OPTIONAL,
+						Parameter::VALUE_PRESENCE::OPTIONAL
+						);
+
+		auto next_param = m_arguments.find(next);
+		if(next_param == m_arguments.end()){
+			matched_param->second.second = m_argv[index + 1];
+			continue;
+		}
+
+		matched_param->second.second = nullptr;
 	}
 
 	if(IsParseResultCorrect()){
