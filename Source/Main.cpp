@@ -39,6 +39,53 @@ static void ShowHelp(){
 	std::cout << "[--noise-amplitude <value>]" << std::endl;
 }
 
+static void SetParameters(ArgumentsParser& parser){
+	parser.AddParam(ArgumentsParser::Parameter('o',
+												std::string("--output"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::REQUIRED,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	// parser.AddParam(ArgumentsParser::Parameter('i',
+	// 											std::string("--input"),
+	// 											ArgumentsParser::Parameter::PARAM_PRESENCE::REQUIRED,
+	// 											ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter('f',
+												std::string("--freq"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter('a',
+												std::string("--amplitude"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));	
+
+	parser.AddParam(ArgumentsParser::Parameter(ArgumentsParser::Parameter::EMPTY_SHORT_NAME,
+												std::string("--sample-rate"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter('h',
+												std::string("--help"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::NOT_REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter('n',
+												std::string("--number-of-harms"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter('b',
+												std::string("--bits-per-harm"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+
+	parser.AddParam(ArgumentsParser::Parameter(ArgumentsParser::Parameter::EMPTY_SHORT_NAME,
+												std::string("--noise-amplitude"),
+												ArgumentsParser::Parameter::PARAM_PRESENCE::OPTIONAL,
+												ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED));
+}
+
 int main(int argc, char* argv[]){
 
 	// Check args
@@ -49,6 +96,8 @@ int main(int argc, char* argv[]){
 	}
 
 	ArgumentsParser parser(argc, argv);
+
+	SetParameters(parser);
 
 	if(parser.Parse() == ArgumentsParser::PARSE_STATUS::ERROR){
 		ShowHelp();
@@ -66,13 +115,16 @@ int main(int argc, char* argv[]){
 		ShowHelp();
 		return 0;
 	}
-
-	//Declaration of system parameters
-
+	
+	ArgumentsParser::Parameter output_path(	'o',
+											std::string("--output"),
+											ArgumentsParser::Parameter::PARAM_PRESENCE::REQUIRED,
+											ArgumentsParser::Parameter::VALUE_PRESENCE::REQUIRED);
+											
 	// Run tests
 	try
 	{
-		DoWavFileTest(argv[1]);
+		DoWavFileTest(parser.GetValueOfParameter(output_path).second);
 	}
 	catch (const std::exception &ex)
 	{
