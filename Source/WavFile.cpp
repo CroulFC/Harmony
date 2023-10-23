@@ -84,9 +84,9 @@ WavFile::~WavFile(){
 }
 
 void WavFile::Write(const uint8_t* data, size_t data_size){
-	if(data_size % m_file_header.byte_rate){
-		throw std::invalid_argument("Data size is not a multiple of byte rate of this wav file");
-	}
+	// if(data_size % m_file_header.byte_rate){
+	// 	throw std::invalid_argument("Data size is not a multiple of byte rate of this wav file");
+	// }
 
 	if(!m_wav_file.is_open()){
 		throw std::runtime_error("The file is not open");
