@@ -56,6 +56,7 @@ m_file_header{}, m_file_open_mode(OPEN_MODE::NOT_OPEN) {
 		if(bytes_per_sample > 8){
 			throw std::domain_error("More than 8 bytes per sample is unsupported");
 		}
+		//TODO
 	}
 
 	FillFileHeader(sample_rate, bytes_per_sample);

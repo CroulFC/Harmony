@@ -26,7 +26,7 @@ class SignalFormer{
 	struct SIGNAL_PARAMETERS{
 		uint32_t				signal_frequency;
 		uint32_t				samples_per_second;
-		uint32_t				amplitude;
+		double 					amplitude;
 		uint8_t					number_of_harmonics;
 		HARMONICS_SET			harmonics_set;
 		BYTES_PER_SAMPLE		bytes_per_sample;
@@ -84,4 +84,8 @@ class SignalFormer{
 	void FormShiftsBuffer(const uint8_t* in_data, double* shifts);
 	double CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift);
 	double CalculateShift(uint8_t bits, uint8_t max_value);
+
+
+	template <typename T>
+	void DoubleToUnsigned(double value, T* out_value);
 };
