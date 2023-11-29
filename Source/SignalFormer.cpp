@@ -6,29 +6,29 @@
 
 #include <iostream>
 #include <limits>
+#include <memory>
 // #ifdef DEBUG
 // 	#define LOG(msg)	do{ std::cout << __FUNCTION__ << "(" << __LINE__ << "):" << msg << std::endl;} while(false) 
 // #else
 // 	#define LOG()
 // #endif //DEBUG
 
-SignalFormer::SignalFormer(SIGNAL_PARAMETERS &signal_params){
+SignalFormer::SignalFormer(SIGNAL_PARAMETERS &signal_params) : m_signal_params(signal_params){
 	m_max_shift = M_PI;
-	m_signal_params = signal_params;
 	m_samples_per_period = m_signal_params.samples_per_second / m_signal_params.signal_frequency;
 	m_data_buffer_size = static_cast<uint8_t>(m_signal_params.data_bits_per_sample) * m_signal_params.number_of_harmonics / 8;
 	m_shifts_buffer_size = m_data_buffer_size * (8 / static_cast<uint8_t>(m_signal_params.data_bits_per_sample));
 }
 
-uint32_t SignalFormer::GetOnePeriodBufferSize(){
+uint32_t SignalFormer::GetOnePeriodBufferSize() const noexcept{
 	return m_samples_per_period * static_cast<uint8_t>(m_signal_params.bytes_per_sample);
 }
 
-uint32_t SignalFormer::GetDataBufferSize(){
+uint32_t SignalFormer::GetDataBufferSize() const noexcept{
 	return m_data_buffer_size;
 }
 
-double SignalFormer::CalculateShift(uint8_t bits, uint8_t max_value){
+double SignalFormer::CalculateShift(uint8_t bits, uint8_t max_value) const noexcept{
 	return m_max_shift / max_value * bits;
 }
 
@@ -69,11 +69,9 @@ void SignalFormer::FormShiftsBuffer(const uint8_t* in_data, double* shifts){
 			}
 		}
 	}
-
-	return;
 }
 
-double SignalFormer::CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift){
+double SignalFormer::CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift) const noexcept{
 	double argument = static_cast<double>(harm_index) * 2 * M_PI * m_signal_params.signal_frequency;
 	argument *= (static_cast<double>(sample_index) / m_signal_params.samples_per_second);
 	argument += phase_shift;
@@ -85,7 +83,7 @@ void SignalFormer::FormOnePeriod(const uint8_t* in_data, uint8_t* out_signal){
 
 	uint32_t i = 0;
 	uint32_t out_signal_index = 0;
-	double* shifts = new double[m_shifts_buffer_size];
+	std::unique_ptr<double[]> shifts(new double[m_shifts_buffer_size]);
 	
 	uint32_t shift_index = 0;
 
@@ -134,7 +132,4 @@ void SignalFormer::FormOnePeriod(const uint8_t* in_data, uint8_t* out_signal){
 		i += static_cast<uint32_t>(m_signal_params.bytes_per_sample);
 	}
 
-	delete[] shifts;
-
-	return;
 }

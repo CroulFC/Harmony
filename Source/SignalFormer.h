@@ -38,16 +38,16 @@ class SignalFormer{
 	explicit SignalFormer(const SignalFormer&) = delete;
 	SignalFormer& operator=(const SignalFormer&) = delete;
 
-	SignalFormer(SignalFormer &&former) noexcept;
-	SignalFormer& operator=(SignalFormer &&former) noexcept;
+	SignalFormer(SignalFormer &&former) noexcept = default;
+	SignalFormer& operator=(SignalFormer &&former) noexcept = default;
 
-	uint32_t GetOnePeriodBufferSize();
+	uint32_t GetOnePeriodBufferSize() const noexcept;
 	void FormOnePeriod(const uint8_t* in_data, uint8_t* out_signal);
-	uint32_t GetDataBufferSize();
+	uint32_t GetDataBufferSize() const noexcept;
 
 
 	private:
-	struct SIGNAL_PARAMETERS	m_signal_params{};
+	struct SIGNAL_PARAMETERS	m_signal_params;
 	uint32_t					m_samples_per_period{};
 	uint32_t					m_data_buffer_size{};
 	uint32_t					m_shifts_buffer_size{};
@@ -82,10 +82,7 @@ class SignalFormer{
 	}ONE_DATA_BYTE;
 
 	void FormShiftsBuffer(const uint8_t* in_data, double* shifts);
-	double CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift);
-	double CalculateShift(uint8_t bits, uint8_t max_value);
+	double CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift) const noexcept;
+	double CalculateShift(uint8_t bits, uint8_t max_value) const noexcept;
 
-
-	template <typename T>
-	void DoubleToUnsigned(double value, T* out_value);
 };
