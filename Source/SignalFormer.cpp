@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <limits>
+#include <vector>
 // #ifdef DEBUG
 // 	#define LOG(msg)	do{ std::cout << __FUNCTION__ << "(" << __LINE__ << "):" << msg << std::endl;} while(false) 
 // #else
@@ -32,7 +33,7 @@ double SignalFormer::CalculateShift(uint8_t bits, uint8_t max_value){
 	return m_max_shift / max_value * bits;
 }
 
-void SignalFormer::FormShiftsBuffer(const uint8_t* in_data, double* shifts){
+void SignalFormer::FormShiftsBuffer(const uint8_t* in_data, std::vector<double>& shifts){
 	ONE_DATA_BYTE cur_data_byte;
 	uint32_t shifts_index = 0;
 	
@@ -85,8 +86,10 @@ void SignalFormer::FormOnePeriod(const uint8_t* in_data, uint8_t* out_signal){
 
 	uint32_t i = 0;
 	uint32_t out_signal_index = 0;
-	double* shifts = new double[m_shifts_buffer_size];
-	
+	std::vector<double> shifts;
+	shifts.reserve(m_shifts_buffer_size);
+	FormShiftsBuffer(in_data, shifts);
+
 	uint32_t shift_index = 0;
 
 	while(i < m_samples_per_period * static_cast<uint8_t>(m_signal_params.bytes_per_sample)){
@@ -133,8 +136,6 @@ void SignalFormer::FormOnePeriod(const uint8_t* in_data, uint8_t* out_signal){
 
 		i += static_cast<uint32_t>(m_signal_params.bytes_per_sample);
 	}
-
-	delete[] shifts;
 
 	return;
 }

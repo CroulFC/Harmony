@@ -81,7 +81,7 @@ class SignalFormer{
 		uint8_t	as_uint8;
 	}ONE_DATA_BYTE;
 
-	void FormShiftsBuffer(const uint8_t* in_data, double* shifts);
+	void FormShiftsBuffer(const uint8_t* in_data, std::vector<double>& shifts);
 	double CalculateValueOfSampleForHarm(uint8_t harm_index, uint32_t sample_index, double phase_shift);
 	double CalculateShift(uint8_t bits, uint8_t max_value);
 
