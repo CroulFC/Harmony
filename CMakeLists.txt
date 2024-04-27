@@ -7,9 +7,18 @@ set(CMAKE_CXX_STANDART 20)
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 set(BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Bin)
 
-file(GLOB_RECURSE SOURCE_FILES ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.h)
+file(GLOB WAVFILE_SOURCE ${SOURCE_DIR}/WavFile/*.cpp ${SOURCE_DIR}/WavFile/*.h)
+add_library(WavFile STATIC ${WAVFILE_SOURCE})
 
-add_executable(Harmony ${SOURCE_FILES})
+file(GLOB DATAENCODER_SOURCE ${SOURCE_DIR}/DataEncoder/*.cpp ${SOURCE_DIR}/DataEncoder/*.h)
+add_executable(DataEncoder ${DATAENCODER_SOURCE})
 
-set_target_properties(Harmony PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
+target_link_libraries(DataEncoder PRIVATE WavFile)
+
+set_target_properties(WavFile PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR}
+)
+set_target_properties(DataEncoder PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR}
+)
 
