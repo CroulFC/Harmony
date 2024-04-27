@@ -57,56 +57,6 @@ def write_inform(inform, filename="output.txt"):
         outp.write(s.pack("B", int(i, 2)))
     outp.close()
 
-@lru_cache(maxsize=SPP*16)
-# Функция для вычисления отдельной гармоники
-def harm(N, freq, cs, sps, ph):
-    arg = freq*N*2*np.pi*(cs/sps)
-    if int(ph):
-        arg += np.pi
-    return AMPLITUDE*(4/np.pi)*np.sin(arg)/N
-
-
-# На основе полученного сигнала формируем .wav-файл
-def create_wav_file(name, data):
-    global SPS
-    try:
-        wav_file = w.open(name, "w")
-    except FileNotFoundError:
-        print(name, "was not found! Please check name of data file.")
-        exit()
-    n_channels = 1  # Число каналов
-    sample_width = 2  # Размер одного отсчёта данных в байтах
-    n_frames = len(data)  # Количество отсчётов
-    comp_type = "NONE"  # Тип компрессии. Пока её нет
-    comp_name = "not compressed"  # Имя компрессора
-    wav_file.setparams((n_channels, sample_width, SPS, n_frames, comp_type, comp_name))
-    for i in data:
-        wav_file.writeframes(s.pack("h", int(i)))
-    wav_file.close()
-
-
-def encrypt():
-    print("Starting encryption")
-    #s = Spinner("Processing\t")
-    global ADS
-    data = read_inform(args.d)
-    ADS = len(data) * SPP
-    signal = [0] * ADS
-    # Формируем по одному периоду сигнала на каждый байт
-    for b in range(len(data)):
-        d = 0
-        db = data[b]
-        for N in range(1, 17, 2):
-            for i in range(SPP):
-                index = i + (b * SPP)
-                signal[index] += harm(N, FREQ, i, SPS, db[d])
-                #s.next()
-            d += 1
-    #s.finish()
-    create_wav_file(args.w, signal)
-    print("Encryption is done!")
-
-
 def decrypt():
     print("Starting decryption")
     output_data = []
